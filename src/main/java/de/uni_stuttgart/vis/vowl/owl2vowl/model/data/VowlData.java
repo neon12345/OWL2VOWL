@@ -365,7 +365,15 @@ public class VowlData {
 			return IRI.create(iriPrefix + generations++);
 		}
 	}
-
+	
+	/**
+	 * owlapi creates both ObjectProperty and DatatypeProperty from Properties
+     	 * with only type DatatypeProperty and InverseFunctionalProperty.
+     	 * The resulting file is different depending on the type that is 
+	 * created first (not deterministic).
+	 * Check if an ObjectProperty has no range and if a DatatypeProperty with the same iri
+   	 * exists, reinsert it to force it into the EntityMap.
+	 */
 	public void fixProperties() {
 		Iterator<Entry<IRI, VowlObjectProperty>> it = objectPropertyMap.entrySet().iterator();
 		while (it.hasNext()) {
