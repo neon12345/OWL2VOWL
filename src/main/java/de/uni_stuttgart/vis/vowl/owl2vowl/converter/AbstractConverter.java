@@ -343,6 +343,30 @@ public abstract class AbstractConverter implements Converter {
 	}
 
 	private void postParsing(OWLOntology loadedOntology, VowlData vowlData, OWLOntologyManager manager) {
+		/*
+  			owlapi creates both ObjectProperty and DatatypeProperty from Properties
+     			with only type DatatypeProperty and InverseFunctionalProperty.
+     			The resulting file is different depending on the type that is 
+			created first (not deterministic).
+			Check if an ObjectProperty has no range and if a DatatypeProperty with the same iri
+   			exists, reinsert it to force it into the EntityMap.
+  		*/
+		Iterator<Entry<IRI, VowlObjectProperty>> it = vowlData.getObjectPropertyMap().entrySet().iterator();
+		while (it.hasNext()) {
+			Entry<IRI, VowlObjectProperty> pair = it.next();
+			VowlObjectProperty P = pair.getValue();
+			Set<IRI> R = P.getRanges();
+			VowlDatatypeProperty D = null;
+			if(R.size() == 0) {
+				try {
+					D = vowlData.getDatatypePropertyForIri(pair.getKey());
+					if(D != null) 
+						vowlData.addDatatypeProperty(D);
+				} catch (Exception e) {
+						
+				}
+			}
+		}
 		setCorrectType(vowlData.getEntityMap().values());
 		parseAnnotations(vowlData, manager);
 		fillDomainRanges(vowlData);
