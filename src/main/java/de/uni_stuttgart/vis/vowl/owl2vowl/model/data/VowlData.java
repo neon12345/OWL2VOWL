@@ -365,6 +365,29 @@ public class VowlData {
 			return IRI.create(iriPrefix + generations++);
 		}
 	}
+
+	public void fixProperties() {
+		Iterator<Entry<IRI, VowlObjectProperty>> it = objectPropertyMap.entrySet().iterator();
+		while (it.hasNext()) {
+			Entry<IRI, VowlObjectProperty> pair = it.next();
+			VowlObjectProperty P = pair.getValue();
+			Set<IRI> R = P.getRanges();
+			VowlDatatypeProperty D = null;
+			if(R.size() == 0) {
+				try {
+					D = getDatatypePropertyForIri(pair.getKey());
+					if(D != null) {
+						for(IRI domain : P.getDomains())
+							D.addDomain(domain);
+						addDatatypeProperty(D);
+						it.remove();
+					}
+				} catch (Exception e) {
+				
+				}
+			}
+		}
+	}
 }
 
 class AllEntityMap<K, V extends AbstractEntity> extends HashMap<K, V> {
