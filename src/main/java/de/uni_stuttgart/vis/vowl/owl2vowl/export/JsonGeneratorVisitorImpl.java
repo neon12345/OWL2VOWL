@@ -90,6 +90,7 @@ public class JsonGeneratorVisitorImpl implements JsonGeneratorVisitor {
 		Map<String, Object> attributes = new HashMap<>();
 
 		addCommonFields(vowlThing, object, attributes);
+		attributes.remove("baseIri");
 		attributes.put("iri", VowlThing.GENERIC_THING_IRI.toString());
 
 		_class.add(object);
