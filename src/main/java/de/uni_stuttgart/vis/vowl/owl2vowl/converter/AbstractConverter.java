@@ -360,10 +360,13 @@ public abstract class AbstractConverter implements Converter {
 			if(R.size() == 0) {
 				try {
 					D = vowlData.getDatatypePropertyForIri(pair.getKey());
-					if(D != null) 
+					if(D != null) {
+						for(IRI domain : P.getDomains())
+							D.addDomain(domain);
 						vowlData.addDatatypeProperty(D);
+					}
 				} catch (Exception e) {
-						
+				
 				}
 			}
 		}
