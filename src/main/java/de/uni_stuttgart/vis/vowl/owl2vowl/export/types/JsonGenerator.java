@@ -83,7 +83,10 @@ public class JsonGenerator {
 		header.put("description", JsonGeneratorVisitorImpl.getLabelsFromAnnotations(ontologyInformation.getAnnotations().getDescription()));
 		header.put("labels", JsonGeneratorVisitorImpl.getLabelsFromAnnotations(ontologyInformation.getAnnotations().getLabels()));
 		header.put("comments", JsonGeneratorVisitorImpl.getLabelsFromAnnotations(ontologyInformation.getAnnotations().getComments()));
-		header.put("other", ontologyInformation.getAnnotations().getIdentifierToAnnotation());
+		header.put("other", ontologyInformation.getAnnotations().getIdentifierToAnnotation().entrySet()
+			.stream()
+		        .filter(x -> !x.getKey().equals("title"))
+		        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
 		
 		Map<String, String> map = vowlData.getPrefixMap();
 		// adding prefix list to that thing;
