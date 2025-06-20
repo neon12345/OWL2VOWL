@@ -91,9 +91,10 @@ public class JsonGenerator {
 		Map<String, String> map = vowlData.getPrefixMap();
 		// adding prefix list to that thing;
 	    for (Map.Entry<String,String> entry : map.entrySet()) {
-	    	  String pr=entry.getKey();
-	            pr= pr.substring(0, pr.length() - 1);
-            prefixList.put(pr,entry.getValue());
+	    	String pr=entry.getKey();
+	        pr= pr.substring(0, pr.length() - 1);
+	        if(!pr.isEmpty())
+            		prefixList.put(pr,entry.getValue());
 	    }
 	}
 	
