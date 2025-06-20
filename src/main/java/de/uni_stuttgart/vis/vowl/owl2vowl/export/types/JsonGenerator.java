@@ -72,6 +72,8 @@ public class JsonGenerator {
 	}
 
 	protected void processHeader(VowlData vowlData) {
+		Set<String> ignoreOther = Stream.of("title", "versionInfo", "creator")
+		         .collect(Collectors.toCollection(HashSet::new));
 		OntologyInformation ontologyInformation = vowlData.getOntologyInformation();
 		header.put("languages", vowlData.getLanguages());
 		header.put("baseIris", vowlData.getBaseIris().stream().map(IRI::toString).collect(Collectors.toSet()));
@@ -83,9 +85,8 @@ public class JsonGenerator {
 		header.put("description", JsonGeneratorVisitorImpl.getLabelsFromAnnotations(ontologyInformation.getAnnotations().getDescription()));
 		header.put("labels", JsonGeneratorVisitorImpl.getLabelsFromAnnotations(ontologyInformation.getAnnotations().getLabels()));
 		header.put("comments", JsonGeneratorVisitorImpl.getLabelsFromAnnotations(ontologyInformation.getAnnotations().getComments()));
-		header.put("other", ontologyInformation.getAnnotations().getIdentifierToAnnotation().entrySet()
-			.stream()
-		        .filter(x -> !x.getKey().equals("title"))
+		header.put("other", ontologyInformation.getAnnotations().getIdentifierToAnnotation().entrySet().stream()
+		        .filter(x -> !ignoreOther.contains(x.getKey()))
 		        .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue)));
 		
 		Map<String, String> map = vowlData.getPrefixMap();
